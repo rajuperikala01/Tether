@@ -12,10 +12,14 @@ function Signup() {
   return (
     <div
       className="h-screen w-screen bg-[#121212]  flex justify-center 
-    pt-14 text-gray-300 "
+    pt-14 text-gray-300 relative"
     >
-      <form className="px-10 py-5 text-start w-[30%] mb-4">
-        <h1 className="pb-8 text-3xl font-bold tracking-wider">
+      <h1 className="absolute top-10 left-10 font-bold text-2xl tracking-wider flex gap-1">
+        TeTher
+        <img src="/brand_img.png" alt="" />
+      </h1>
+      <form className="px-10 py-8 text-start w-[30%] mb-4">
+        <h1 className="pb-8 text-xl font-bold tracking-wider">
           Create Account
         </h1>
         <Input
