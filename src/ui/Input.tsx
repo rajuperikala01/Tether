@@ -18,7 +18,7 @@ export default function Input({ label, type, id, onChange, value }: props) {
         required
         onChange={(e) => onChange(e.target.value)}
         value={value}
-        className="w-full h-8 pl-2 outline-none border border-neutral-600 rounded-sm"
+        className="w-full h-8 pl-2 outline-none text-sm border border-neutral-600 rounded-sm"
       />
     </div>
   );
