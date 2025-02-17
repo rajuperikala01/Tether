@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Input from "../ui/Input";
 import PasswordInput from "../ui/PasswordInput";
 import Button from "../ui/Button";
 import { Link } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [firstName, setFirstName] = useState<string>("");
@@ -10,7 +12,26 @@ function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
 
+  async function signup(e: FormEvent) {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000", {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+      });
+      if (response.status === 200) {
+        navigate("/signin");
+      }
+    } catch (error: any) {
+      if (error instanceof AxiosError) {
+        console.log(error);
+      }
+    }
+  }
   return (
     <div
       className="h-screen w-screen bg-[#121212]  flex justify-center 
@@ -20,7 +41,10 @@ function Signup() {
         TeTher
         <img src="/brand_img.png" alt="" />
       </h1>
-      <form className="px-10 py-8 text-start w-full sm:w-[70%] md:w-1/2 lg:w-[30%] mb-4">
+      <form
+        onSubmit={signup}
+        className="px-10 py-8 text-start w-full sm:w-[70%] md:w-1/2 lg:w-[30%] mb-4"
+      >
         <h1 className="pb-8 text-xl font-bold tracking-wider">
           Create Account
         </h1>

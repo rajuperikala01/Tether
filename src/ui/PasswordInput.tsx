@@ -19,7 +19,7 @@ export default function ({ value, onChange, showPassword, click }: props) {
           id="password"
           onChange={(e) => onChange(e.target.value)}
           value={value}
-          className="w-[87%] h-full outline-none pl-2"
+          className="w-[87%] h-full outline-none pl-2 text-sm"
           required
         />
         {showPassword ? (
