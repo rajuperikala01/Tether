@@ -1,13 +1,33 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Input from "../ui/Input";
 import PasswordInput from "../ui/PasswordInput";
 import Button from "../ui/Button";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Signin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  async function signin(e: FormEvent) {
+    e.preventDefault();
+    try {
+      const sign = await axios.post(
+        "http://localhost:5000/api/v1/auth/signin",
+        {
+          email: email,
+          password: password,
+        }
+      );
+
+      if (sign.status === 200) {
+        navigate("/chats");
+      }
+    } catch (error) {}
+  }
 
   return (
     <div
@@ -18,7 +38,10 @@ function Signin() {
         TeTher
         <img src="/brand_img.png" alt="" />
       </h1>
-      <form className="px-10 pt-5 text-start w-full sm:w-[70%] md:w-1/2 lg:w-[30%] mb-4">
+      <form
+        className="px-10 pt-5 text-start w-full sm:w-[70%] md:w-1/2 lg:w-[30%] mb-4"
+        onSubmit={signin}
+      >
         <h1 className="pb-3 text-xl font-bold tracking-wider">
           Login to your Account
         </h1>

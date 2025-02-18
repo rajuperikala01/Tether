@@ -17,12 +17,18 @@ function Signup() {
   async function signup(e: FormEvent) {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000", {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/auth/signup",
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status === 200) {
         navigate("/signin");
       }
