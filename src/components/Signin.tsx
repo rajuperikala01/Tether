@@ -20,11 +20,15 @@ function Signin() {
         {
           email: email,
           password: password,
+        },
+        {
+          withCredentials: true,
         }
       );
 
       if (sign.status === 200) {
-        navigate("/chats");
+        console.log(sign);
+        navigate("/");
       }
     } catch (error) {}
   }
