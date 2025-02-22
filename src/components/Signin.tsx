@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import { Link } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { signInSchema } from "../validation/authSchemas";
 
 function Signin() {
   const [email, setEmail] = useState<string>("");
@@ -16,6 +17,15 @@ function Signin() {
   async function signin(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    const validation = signInSchema.safeParse({
+      email: email,
+      password: password,
+    });
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
     try {
       const sign = await axios.post(
         "http://localhost:5000/api/v1/auth/signin",
