@@ -3,17 +3,19 @@ import Input from "../ui/Input";
 import PasswordInput from "../ui/PasswordInput";
 import Button from "../ui/Button";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Signin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   async function signin(e: FormEvent) {
     e.preventDefault();
+    setError(null);
     try {
       const sign = await axios.post(
         "http://localhost:5000/api/v1/auth/signin",
@@ -27,10 +29,23 @@ function Signin() {
       );
 
       if (sign.status === 200) {
-        console.log(sign);
+        localStorage.setItem("user", JSON.stringify({}));
         navigate("/");
       }
-    } catch (error) {}
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.log(error);
+
+        if (!error.response) {
+          setError("Server is unreachable right now. Please try again later");
+          return;
+        }
+
+        setError(error.response.data.error);
+        return;
+      }
+      setError("Unexpected error occurred! Please try Later");
+    }
   }
 
   return (
@@ -49,6 +64,8 @@ function Signin() {
         <h1 className="pb-3 text-xl font-bold tracking-wider">
           Login to your Account
         </h1>
+        <div className="text-xs text-red-500 h-2">{error && error}</div>
+
         <Input
           type="email"
           id="email"
