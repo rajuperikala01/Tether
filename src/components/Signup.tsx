@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import { Link } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { signupSchema } from "../validation/authSchemas";
 
 function Signup() {
   const [firstName, setFirstName] = useState<string>("");
@@ -12,10 +13,23 @@ function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   async function signup(e: FormEvent) {
     e.preventDefault();
+    setError(null);
+    const validation = signupSchema.safeParse({
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
     try {
       const response = await axios.post(
         "http://localhost:5000/api/v1/auth/signup",
@@ -34,8 +48,14 @@ function Signup() {
       }
     } catch (error: any) {
       if (error instanceof AxiosError) {
-        console.log(error);
+        if (!error.response) {
+          setError("Server is unreachable right now. Please try again later");
+        }
+
+        setError(error.response?.data.error);
+        return;
       }
+      setError("An unexpected error occurred. Please try after sometime");
     }
   }
   return (
@@ -54,6 +74,8 @@ function Signup() {
         <h1 className="pb-8 text-xl font-bold tracking-wider">
           Create Account
         </h1>
+        <div className="text-xs text-red-500 h-2">{error && error}</div>
+
         <Input
           id="firstName"
           label="First Name*"
