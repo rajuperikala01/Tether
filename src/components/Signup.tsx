@@ -44,12 +44,20 @@ function Signup() {
         }
       );
       if (response.status === 200) {
-        navigate("/signin");
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            userId: response.data.userId,
+            email: response.data.email,
+          })
+        );
+        navigate("/");
       }
     } catch (error: any) {
       if (error instanceof AxiosError) {
         if (!error.response) {
           setError("Server is unreachable right now. Please try again later");
+          return;
         }
 
         setError(error.response?.data.error);

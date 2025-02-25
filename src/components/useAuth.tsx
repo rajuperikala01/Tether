@@ -16,7 +16,7 @@ export default function useAuth() {
   async function getAuth() {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/v1/auth/getAuth",
+        "http://localhost:5000/api/v1/auth/getauth",
         {
           withCredentials: true,
         }

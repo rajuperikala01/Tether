@@ -39,7 +39,10 @@ function Signin() {
       );
 
       if (sign.status === 200) {
-        localStorage.setItem("user", JSON.stringify({}));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ userId: sign.data.userId, email: sign.data.email })
+        );
         navigate("/");
       }
     } catch (error: unknown) {

@@ -8,13 +8,15 @@ interface message {
 export default function () {
   const [socket, setSocket] = useState<null | WebSocket>(null);
   const [messages, setMessages] = useState<message[]>([]);
-  // const [error, setError] = useState<string | null>(null);
   const [latest, setLatest] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const userId = useRef(Math.floor(Math.random() * 10000));
+  const [friends, setFriends] = useState({});
+  const user: { userId: number; email: string } = JSON.parse(
+    localStorage.getItem("user")!
+  );
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
+    const socket = new WebSocket(`ws://localhost:8080?userId=${user.userId}`);
 
     socket.onopen = () => {
       console.log("Connected");
@@ -64,7 +66,7 @@ export default function () {
             <div
               key={index}
               className={`px-2 py-1 text-md mt-1 max-w-[70%]  break-words ${
-                data.userId === userId.current
+                data.userId === user.userId
                   ? "ml-auto pl-3 rounded-l-lg rounded-r-sm bg-blue-500"
                   : "mr-auto pr-2 rounded-r-lg rounded-l-sm bg-gray-800"
               }`}
@@ -84,11 +86,11 @@ export default function () {
             onSubmit={(e) => {
               e.preventDefault();
               socket.send(
-                JSON.stringify({ userId: userId.current, message: latest })
+                JSON.stringify({ senderId: user.userId, message: latest })
               );
               setMessages((prev) => [
                 ...prev,
-                { userId: userId.current, message: latest },
+                { userId: user.userId, message: latest },
               ]);
               setLatest("");
             }}
