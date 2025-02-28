@@ -1,9 +1,9 @@
-import MessageBox from "../components/MessageBox";
+import Contacts from "../components/Contacts";
 
 function Home() {
   return (
     <div>
-      <MessageBox />
+      <Contacts />
     </div>
   );
 }
