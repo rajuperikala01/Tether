@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import Contact from "./Contact";
+import InputForm from "./InputForm";
 
 interface contact {
   id: number;
@@ -12,10 +13,15 @@ const initialUsers = [
   { id: 2, firstName: "Pandu", lastName: "Perikala" },
   { id: 3, firstName: "Amma", lastName: "" },
 ];
+
 export default function () {
   const [contacts, setContacts] = useState<contact[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [selected, setSelected] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+
   const user: { userId: number; email: string } = JSON.parse(
     localStorage.getItem("user")!
   );
@@ -49,36 +55,35 @@ export default function () {
     fetchContacts();
   }, []);
 
-  return (
-    <div className="bg-neutral-900 h-screen pt-1 md:pt-4 w-screen text-white md:flex">
-      <div className="md:basis-[33%] lg:basis-[25%] border-r border-gray-600">
-        <div
-          className="h-14 w-full pl-4 
-        flex justify-start items-center
-        text-2xl font-bold tracking-wider gap-1 border-b border-neutral-700 shadow-sm shadow-neutral-700
-        "
-        >
-          TeTher
-          <img src="/brand_img.png" alt="" />
-        </div>
+  useEffect(() => {
+    const socket = new WebSocket(`ws://localhost:8080?userId=${user.userId}`);
+    if (socket.OPEN) {
+      setSocket(socket);
+    }
+  }, []);
 
-        {error && <div>{error}</div>}
-        {loading && (
-          <div className="flex justify-center items-center w-full text-neutral-400 min-h-[500px]">
-            Loading...
-          </div>
-        )}
-        <div className="flex flex-col mt-2 items-center w-full justify-center">
-          {contacts &&
-            contacts.map((contact) => (
-              <Contact
-                id={contact.id}
-                firstName={contact.firstName}
-                lastName={contact.lastName}
-              />
-            ))}
+  return (
+    <div className="bg-[#121212] h-screen w-screen text-[#EAEAEA] flex ">
+      <div className="w-full md:w-[25%] h-full border-r border-gray-700 shadow-xs shadow-gray-700">
+        <div
+          className="p-5 text-lg font-semibold tracking-widest
+        flex justify-between items-center border-b border-gray-700 shadow-xs shadow-gray-700"
+        >
+          TEtheR
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 2048 2048"
+          >
+            <path
+              fill="#EAEAEA"
+              d="M1536 1536h-13q-23-112-81-206t-141-162t-187-106t-218-38q-88 0-170 23t-153 64t-129 100t-100 130t-65 153t-23 170H128q0-120 35-231t101-205t156-167t204-115q-113-74-176-186t-64-248q0-106 40-199t109-163T696 40T896 0t199 40t163 109t110 163t40 200q0 66-16 129t-48 119t-75 103t-101 83q112 43 206 118t162 176zM512 512q0 80 30 149t82 122t122 83t150 30q79 0 149-30t122-82t83-122t30-150q0-79-30-149t-82-122t-123-83t-149-30q-80 0-149 30t-122 82t-83 123t-30 149m1280 1152h256v128h-256v256h-128v-256h-256v-128h256v-256h128z"
+            />
+          </svg>
         </div>
       </div>
+      <div className="w-full md:w-[75%]">Hi</div>
     </div>
   );
 }
