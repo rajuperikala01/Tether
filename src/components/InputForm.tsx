@@ -2,30 +2,35 @@ export default function InputForm() {
   return (
     <form
       className="px-2 flex 
-    w-full md:w-[76%] h-14 py-3 border-t border-gray-600
-     shadow-gray-400 shadow-2xs justify-center
-      items-center gap-2 fixed bottom-0"
+    w-full md:w-[76%] h-14 py-3 border-t border-neutral-700
+     shadow-neutral-400 shadow-2xs justify-between
+      items-center gap-2 fixed bottom-0 pl-2 md:pl-20"
     >
       <input
         type="text"
         //   onChange={(e) => setLatest(e.target.value)}
         //   value={latest}
-        className="w-[92%] h-full border-gray-600 border pl-2 rounded-sm outline-0"
+        className="w-[90%] h-full border-neutral-600 
+        text-[13px] placeholder:tracking-wider
+        border pl-2 rounded-sm outline-0"
         placeholder="Type message"
       />
       <button
         type="submit"
-        className="w-[4%] flex justify-start items-center h-full border-none outline-none"
+        className="md:w-[10%] flex items-center justify-start md:justify-center h-full border-none outline-none"
         //   disabled={!latest.trim()}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 15 16"
-          className="h-8 w-10"
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
         >
           <path
-            fill="#48b7c2"
-            d="M12.49 7.14L3.44 2.27c-.76-.41-1.64.3-1.4 1.13l1.24 4.34q.075.27 0 .54l-1.24 4.34c-.24.83.64 1.54 1.4 1.13l9.05-4.87a.98.98 0 0 0 0-1.72Z"
+            fill="none"
+            stroke="#03DAC6"
+            d="m6.998 10.247l.435.76c.277.485.415.727.415.993s-.138.508-.415.992l-.435.761c-1.238 2.167-1.857 3.25-1.375 3.788c.483.537 1.627.037 3.913-.963l6.276-2.746c1.795-.785 2.693-1.178 2.693-1.832s-.898-1.047-2.693-1.832L9.536 7.422c-2.286-1-3.43-1.5-3.913-.963s.137 1.62 1.375 3.788Z"
+            stroke-width="1.5"
           />
         </svg>
       </button>
