@@ -8,6 +8,12 @@ interface contact {
   firstName: string;
   lastName: string;
 }
+
+interface message {
+  sendTo: number;
+  receivedFrom: number;
+  message: string;
+}
 const initialUsers = [
   { id: 1, firstName: "Raju", lastName: "Perikala" },
   { id: 2, firstName: "Pandu", lastName: "Perikala" },
@@ -21,6 +27,9 @@ export default function () {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [messages, setMessages] = useState<message[]>([]);
+  const [latest, setLatest] = useState<string>("");
+  const [sendTo, setSendTo] = useState<number | null>(null);
   const [selected, setSelected] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 
@@ -59,9 +68,27 @@ export default function () {
 
   useEffect(() => {
     const socket = new WebSocket(`ws://localhost:8080?userId=${user.userId}`);
-    if (socket.OPEN) {
+
+    socket.onopen = () => {
       setSocket(socket);
-    }
+    };
+
+    socket.onmessage = (event) => {
+      const newMessage = JSON.parse(event.data);
+      setMessages((prev) => [...prev, newMessage]);
+    };
+
+    socket.onclose = () => {
+      setSocket(null);
+    };
+
+    socket.onerror = (error) => {
+      console.log(error);
+    };
+
+    return () => {
+      socket.close();
+    };
   }, []);
 
   useEffect(() => {

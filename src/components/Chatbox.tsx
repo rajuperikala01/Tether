@@ -2,17 +2,17 @@ import InputForm from "./InputForm";
 
 export default function ({ onClick }: { onClick: () => void }) {
   return (
-    <div>
-      <div className="flex gap-1 md:gap-4 p-2 md:p-3 w-full items-center border-b border-neutral-700">
+    <div className="relative h-full w-full">
+      <div className="flex gap-1 md:gap-4 p-2 fixed top-0 z-10 md:p-5 w-full items-center border-b border-neutral-700">
         <div
-          className="h-8 w-8 md:h-10 md:w-10 flex items-center justify-center rounded-full hover:bg-neutral-800
+          className="h-8 w-8 md:h-10 md:w-10 md:hidden flex items-center justify-center rounded-full hover:bg-neutral-800
         "
           onClick={onClick}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            className="h-6 w-6 md:h-8 md:w-8"
+            className="h-6 w-6 md:h-8 md:w-8 "
           >
             <path
               fill="#EAEAEA"
