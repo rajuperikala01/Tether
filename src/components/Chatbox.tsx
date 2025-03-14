@@ -1,9 +1,32 @@
+import { text } from "express";
 import InputForm from "./InputForm";
 
-export default function ({ onClick }: { onClick: () => void }) {
+interface message {
+  sendTo: number;
+  receivedFrom: number;
+  message: string;
+}
+interface contact {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
+export default function ({
+  onClick,
+  socket,
+  messages,
+  contact,
+  userId,
+}: {
+  onClick: () => void;
+  socket: WebSocket | null;
+  messages: message[];
+  contact: contact | null;
+  userId: number;
+}) {
   return (
-    <div className="relative h-full w-full">
-      <div className="flex gap-1 md:gap-4 p-2 fixed top-0 z-10 md:p-5 w-full items-center border-b border-neutral-700">
+    <div className="relative h-screen w-full flex flex-col">
+      <div className="flex gap-1 md:gap-4 p-2 bg-[#121212] fixed top-0 z-10 md:p-5 w-full items-center border-b border-neutral-700">
         <div
           className="h-8 w-8 md:h-10 md:w-10 md:hidden flex items-center justify-center rounded-full hover:bg-neutral-800
         "
@@ -20,11 +43,36 @@ export default function ({ onClick }: { onClick: () => void }) {
             />
           </svg>
         </div>
-        <p className="text-sm">Raju Perikala</p>
+        {contact && (
+          <p className="text-sm tracking-wide">
+            {contact.firstName + " " + contact.lastName}
+          </p>
+        )}
       </div>
 
-      <div></div>
-      <InputForm />
+      <div className="w-full flex flex-col pt-16 pb-14 px-4 justify-end overflow-scroll flex-1">
+        {messages.map((data) => {
+          const isSent = data.receivedFrom === userId;
+          return (
+            <div
+              className={`flex ${isSent ? "justify-end  " : "justify-start"}`}
+            >
+              <p
+                className={`text-[13px] font-light p-[6px] text-neutral-300 ${
+                  isSent
+                    ? "bg-[#182747]  my-1 pr-2 pl-3 rounded-l-md rounded-r-sm"
+                    : "bg-neutral-800 pr-3 pl-2 my-1 rounded-r-md rounded-l-sm"
+                }  `}
+              >
+                {data.message}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="fixed bottom-0 w-full">
+        <InputForm />
+      </div>
     </div>
   );
 }

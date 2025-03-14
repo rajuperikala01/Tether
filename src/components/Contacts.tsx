@@ -22,15 +22,44 @@ const initialUsers = [
   { id: 5, firstName: "Swapna", lastName: "Perikala" },
 ];
 
+const initialMesgs = [
+  { sendTo: 2, receivedFrom: 3, message: "Hi", createdAt: new Date() },
+  { sendTo: 3, receivedFrom: 2, message: "oy" },
+  { sendTo: 2, receivedFrom: 3, message: "Em chesthunnav" },
+  { sendTo: 3, receivedFrom: 2, message: "Em Cheyatla" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
+  { sendTo: 3, receivedFrom: 2, message: "Ha" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
+  { sendTo: 3, receivedFrom: 2, message: "Ok" },
+  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
+  { sendTo: 3, receivedFrom: 2, message: "Ha" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
+  { sendTo: 3, receivedFrom: 2, message: "Ok" },
+  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
+  { sendTo: 3, receivedFrom: 2, message: "Ha" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
+  { sendTo: 3, receivedFrom: 2, message: "Ok" },
+  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
+  { sendTo: 3, receivedFrom: 2, message: "Ha" },
+  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
+  { sendTo: 3, receivedFrom: 2, message: "Ok" },
+  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
+  { sendTo: 3, receivedFrom: 2, message: "Ok" },
+];
+
 export default function () {
   const [contacts, setContacts] = useState<contact[] | null>(initialUsers);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<message[]>([]);
+  const [messages, setMessages] = useState<message[]>(initialMesgs);
   const [latest, setLatest] = useState<string>("");
   const [sendTo, setSendTo] = useState<number | null>(null);
   const [selected, setSelected] = useState<boolean>(false);
+  const [contact, setContact] = useState<contact | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 
   const user: { userId: number; email: string } = JSON.parse(
@@ -106,11 +135,11 @@ export default function () {
         h-full border-r border-neutral-700 shadow-xs shadow-neutral-700 md:pl-2`}
       >
         <div
-          className="p-3 text-lg font-semibold tracking-widest
+          className="p-4 text-lg font-semibold tracking-widest
         flex justify-between items-center border-b border-neutral-700 shadow-xs shadow-nuetral-700"
         >
           TEtheR
-          <div className="h-10 w-10 flex items-center justify-center rounded-full hover:bg-neutral-800">
+          <div className=" w-10 flex items-center justify-center rounded-full hover:bg-neutral-800">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -132,7 +161,15 @@ export default function () {
                     firstName={contact.firstName}
                     lastName={contact.lastName}
                     id={contact.id}
-                    onClick={() => setSelected(true)}
+                    onClick={() => {
+                      setContact({
+                        id: contact.id,
+                        firstName: contact.firstName,
+                        lastName: contact.lastName,
+                      });
+                      setSendTo(contact.id);
+                      setSelected(true);
+                    }}
                   />
                 );
               })
@@ -143,7 +180,13 @@ export default function () {
         className={`${isMobile && selected && "w-full"}
       ${isMobile && !selected && "hidden"} w-[75%] `}
       >
-        <Chatbox onClick={() => setSelected(false)} />
+        <Chatbox
+          onClick={() => setSelected(false)}
+          socket={socket}
+          messages={messages}
+          contact={contact}
+          userId={user.userId}
+        />
       </div>
     </div>
   );

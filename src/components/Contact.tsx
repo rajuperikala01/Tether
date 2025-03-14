@@ -17,7 +17,9 @@ export default function Contact({ id, firstName, lastName, onClick }: contact) {
         <div className="h-10 w-10 flex justify-center font-medium text-sm items-center rounded-full bg-gray-600">
           {firstName.slice(0, 1)}
         </div>
-        <div className="text-sm">{firstName + " " + lastName}</div>
+        <div className="text-sm tracking-wide">
+          {firstName + " " + lastName}
+        </div>
       </div>
       <div className="basis-[20%] flex items-center justify-center text-xs text-neutral-400">
         1.50 AM
