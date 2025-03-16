@@ -11,53 +11,16 @@ interface contact {
 
 interface message {
   sendTo: number;
-  receivedFrom: number;
+  sender: number;
   message: string;
 }
-const initialUsers = [
-  { id: 1, firstName: "Raju", lastName: "Perikala" },
-  { id: 2, firstName: "Pandu", lastName: "Perikala" },
-  { id: 3, firstName: "Sarada", lastName: "Perikala" },
-  { id: 4, firstName: "Sukanya", lastName: "Perikala" },
-  { id: 5, firstName: "Swapna", lastName: "Perikala" },
-];
-
-const initialMesgs = [
-  { sendTo: 2, receivedFrom: 3, message: "Hi", createdAt: new Date() },
-  { sendTo: 3, receivedFrom: 2, message: "oy" },
-  { sendTo: 2, receivedFrom: 3, message: "Em chesthunnav" },
-  { sendTo: 3, receivedFrom: 2, message: "Em Cheyatla" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
-  { sendTo: 3, receivedFrom: 2, message: "Ha" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
-  { sendTo: 3, receivedFrom: 2, message: "Ok" },
-  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
-  { sendTo: 3, receivedFrom: 2, message: "Ha" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
-  { sendTo: 3, receivedFrom: 2, message: "Ok" },
-  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
-  { sendTo: 3, receivedFrom: 2, message: "Ha" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
-  { sendTo: 3, receivedFrom: 2, message: "Ok" },
-  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinnava" },
-  { sendTo: 3, receivedFrom: 2, message: "Ha" },
-  { sendTo: 2, receivedFrom: 3, message: "Thinna" },
-  { sendTo: 3, receivedFrom: 2, message: "Ok" },
-  { sendTo: 2, receivedFrom: 3, message: "Thank you" },
-  { sendTo: 3, receivedFrom: 2, message: "Ok" },
-];
 
 export default function () {
-  const [contacts, setContacts] = useState<contact[] | null>(initialUsers);
+  const [contacts, setContacts] = useState<contact[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<message[]>(initialMesgs);
-  const [latest, setLatest] = useState<string>("");
-  const [sendTo, setSendTo] = useState<number | null>(null);
+  const [messages, setMessages] = useState<message[]>([]);
   const [selected, setSelected] = useState<boolean>(false);
   const [contact, setContact] = useState<contact | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
@@ -91,9 +54,9 @@ export default function () {
     }
   }
 
-  // useEffect(() => {
-  //   fetchContacts();
-  // }, []);
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
   useEffect(() => {
     const socket = new WebSocket(`ws://localhost:8080?userId=${user.userId}`);
@@ -167,7 +130,6 @@ export default function () {
                         firstName: contact.firstName,
                         lastName: contact.lastName,
                       });
-                      setSendTo(contact.id);
                       setSelected(true);
                     }}
                   />
@@ -186,6 +148,9 @@ export default function () {
           messages={messages}
           contact={contact}
           userId={user.userId}
+          setMessages={(data: message) =>
+            setMessages((prev) => [...prev, data])
+          }
         />
       </div>
     </div>
