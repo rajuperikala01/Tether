@@ -1,3 +1,12 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+interface user {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
+
 export default function NewContacts({
   setSearch,
   search,
@@ -5,14 +14,41 @@ export default function NewContacts({
   search: boolean;
   setSearch: () => void;
 }) {
+  const [name, setName] = useState<string>("");
+  const [users, setUsers] = useState<user[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchUsers() {
+    try {
+      setUsers(null);
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/users/getusers?name=${name}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        setUsers(response.data.users);
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again");
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, [name]);
+
   return (
     <dialog
-      className="w-full h-full bg-black/80 backdrop-blur-md fixed top-0 left-0 flex items-center justify-center"
+      className="w-full h-full bg-black/80 backdrop-blur-md
+       fixed top-0 left-0 flex items-start justify-center md:pt-20 pt-10"
       open={search}
     >
-      <div className="bg-[#1E1E1E] w-[90%] md:w-[50%] p-6 rounded-lg shadow-lg">
+      <div className="bg-[#1E1E1E] w-[90%] md:w-[50%] p-6 rounded-lg shadow-lg pt-5">
         {/* Close Button */}
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center">
           <button
             onClick={setSearch}
             className="p-2 rounded-full hover:bg-neutral-800"
@@ -37,6 +73,8 @@ export default function NewContacts({
             type="text"
             placeholder="Search users..."
             className="w-full bg-transparent outline-none text-white p-2"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
           />
           <button
             type="submit"
@@ -61,7 +99,13 @@ export default function NewContacts({
 
         {/* Search Results (To be implemented) */}
         <div className="mt-4 text-neutral-400">
-          Search results will appear here...
+          {users && users.length > 0 ? (
+            users.map((user) => {
+              return <div>{user.firstName}</div>;
+            })
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </div>
     </dialog>

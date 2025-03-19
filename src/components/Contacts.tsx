@@ -105,7 +105,7 @@ export default function () {
         >
           TEtheR
           <div
-            onClick={() => setSearch(!search)}
+            onClick={() => setSearch(true)}
             className=" w-10 flex items-center justify-center rounded-full hover:bg-neutral-800"
           >
             <svg
@@ -122,9 +122,7 @@ export default function () {
           </div>
         </div>
         {search && (
-          <div className="absolute left-0 top-0 md:w-[25%] h-full w-full">
-            <NewContacts search={search} setSearch={() => setSearch(false)} />
-          </div>
+          <NewContacts search={search} setSearch={() => setSearch(false)} />
         )}
         <div className="w-full flex flex-col items-center">
           {contacts
