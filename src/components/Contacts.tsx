@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import Contact from "./Contact";
 import Chatbox from "./Chatbox";
+import NewContacts from "./NewContacts";
 
 interface contact {
   id: number;
@@ -19,6 +20,7 @@ export default function () {
   const [contacts, setContacts] = useState<contact[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState<boolean>(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<message[]>([]);
   const [selected, setSelected] = useState<boolean>(false);
@@ -32,7 +34,7 @@ export default function () {
   async function fetchContacts() {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/user/getcontacts`,
+        `http://localhost:5000/api/v1/contacts/getcontacts`,
         {
           withCredentials: true,
         }
@@ -90,7 +92,7 @@ export default function () {
   }, []);
 
   return (
-    <div className="bg-[#121212] h-screen w-screen text-[#EAEAEA] flex ">
+    <div className="bg-[#121212] h-screen w-screen text-[#EAEAEA] flex relative">
       <div
         className={`${isMobile && !selected && "w-full"} 
         ${isMobile && selected && "hidden"}
@@ -102,7 +104,10 @@ export default function () {
         flex justify-between items-center border-b border-neutral-700 shadow-xs shadow-nuetral-700"
         >
           TEtheR
-          <div className=" w-10 flex items-center justify-center rounded-full hover:bg-neutral-800">
+          <div
+            onClick={() => setSearch(!search)}
+            className=" w-10 flex items-center justify-center rounded-full hover:bg-neutral-800"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -116,6 +121,11 @@ export default function () {
             </svg>
           </div>
         </div>
+        {search && (
+          <div className="absolute left-0 top-0 md:w-[25%] h-full w-full">
+            <NewContacts search={search} setSearch={() => setSearch(false)} />
+          </div>
+        )}
         <div className="w-full flex flex-col items-center">
           {contacts
             ? contacts.map((contact) => {
@@ -138,6 +148,7 @@ export default function () {
             : "Add Contacts to Chat"}
         </div>
       </div>
+
       <div
         className={`${isMobile && selected && "w-full"}
       ${isMobile && !selected && "hidden"} w-[75%] `}

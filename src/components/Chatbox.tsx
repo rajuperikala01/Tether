@@ -37,7 +37,7 @@ export default function Chatbox({
 
   return (
     <div className="h-screen w-full flex flex-col">
-      <div className="flex gap-1 md:gap-4 p-2 bg-[#121212] z-10 md:p-5 w-full items-center border-b border-neutral-700">
+      <div className="flex gap-1 md:gap-4 p-2 md:p-5 w-full items-center border-b border-neutral-700">
         <div
           className="h-8 w-8 md:h-10 md:w-10 md:hidden flex items-center justify-center rounded-full hover:bg-neutral-800
         "
@@ -61,7 +61,7 @@ export default function Chatbox({
         )}
       </div>
 
-      <div className="flex-1 py-2 px-4 overflow-y-auto flex flex-col">
+      <div className="flex-1 py-2 px-4 overflow-y-scroll flex flex-col scroll-bar">
         {messages.map((data) => {
           const isSent = data.sender === userId;
           return (
